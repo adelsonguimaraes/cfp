@@ -1,0 +1,68 @@
+<!-- Despesa -->
+<ul class="menu">
+	<li><a href="#">Home</a></li>
+	<li><a href="#">Despesas</a></li>
+	<li><a href="#">Recebimentos</a></li>
+	<li><a href="#">Sair</a></li>
+</ul>
+<div class="container">
+	<div class="row">
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4>Despesas</h4>
+				</div>
+				<div class="panel-body">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<td>ID</td>
+								<td>Data Aquisição</td>
+								<td>Descrição</td>
+								<td>Dia do vencimento</td>
+								<td>Prestações</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="obj in despesas">
+								<td ng-bind="obj.id"></td>
+								<td ng-bind="obj.dataaquisicao"></td>
+								<td ng-bind="obj.descricao"></td>
+								<td ng-bind="obj.prestacoes"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4>Detalhes</h4>
+				</div>
+				<div class="panel-body">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<td>ID</td>
+								<td>Descrição</td>
+								<td>Valor</td>
+								<td>Quantidade</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="obj in despesas">
+								<td ng-bind="obj.id"></td>
+								<td ng-bind="obj.dataaquisicao"></td>
+								<td ng-bind="obj.descricao"></td>
+								<td ng-bind="obj.prestacoes"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		</div>
+	</div>
+	
+</div>

@@ -31,8 +31,13 @@
 		}
 	}
 
+	var home = function ($scope) {
+		console.log('eu sou a home');
+	}
+
 	angular
 		.module('cfp')
-		.controller('loginCtrl', login);
+		.controller('loginCtrl', login)
+		.controller('homeCtrl', home);
 
 })();

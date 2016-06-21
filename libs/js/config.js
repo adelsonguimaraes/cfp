@@ -21,7 +21,19 @@
 	        .state('home', {
 	            url: "/home",
 	            templateUrl: "views/home.html",
-	            // controller: "loginCtrl",
+	            controller: "homeCtrl",
+	            data: { pageTitle: 'Login', specialClass: 'gray-bg'},
+	        })
+	        .state('despesa', {
+	            url: "/despesa",
+	            templateUrl: "views/despesa.html",
+	            // controller: "homeCtrl",
+	            data: { pageTitle: 'Login', specialClass: 'gray-bg'},
+	        })
+	        .state('recebimento', {
+	            url: "/recebimento",
+	            templateUrl: "views/recebimento.html",
+	            // controller: "homeCtrl",
 	            data: { pageTitle: 'Login', specialClass: 'gray-bg'},
 	        });
 	}
