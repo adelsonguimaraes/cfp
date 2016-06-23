@@ -1,24 +1,24 @@
 .menu {
-	list-style: none;
 	position: fixed;
-	left:0;
-	margin-left: -30px;
-	background: #666;
+	bottom: 80;
+	right: 20;
 }
-.menu > li {
-	line-height: 20px;
-	margin:2px 0px;
+.menu > ul {
+	list-style: none;
 }
-.menu > li > a {
-	background: #333;
+.menu > ul > li {
+	margin-top: 10px;
+	/*background: orange;*/
 	padding: 10px;
-	display: block;
-	/*border-radius: 50px;*/
-	text-align: center;
-	color: #fff;
-	text-decoration: none;
+	border-radius: 50px;
+	border: 1px dotted;
 }
-.menu > li > a:hover {
-	background: #666;
-	/*color: #333;*/
+.menu > ul > li > a {
+	text-decoration: none;
+	color: black;
+	border-radius: 50px;
+	font-weight: 700;
+}
+.menu > ul > li > a:hover {
+	text-decoration: none;
 }
