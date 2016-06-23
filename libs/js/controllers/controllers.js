@@ -42,11 +42,20 @@
 				"id":"",
 				"dataaquisicao":"",
 				"diavencimento":"",
-				"prestacoes":"",
+				"prestacao":"",
 				"itens": []
 			}
 		}
 		inciaScope();
+		function iniciaItem () {
+			$scope.item = {
+				"id":"",
+				"descricao":"",
+				"valor":"",
+				"quantidade":""
+			}
+		}
+		iniciaItem();
 
 		$scope.addItem = function (obj) {
 			var item = {
@@ -56,12 +65,11 @@
 				"quantidade":obj.quantidade
 			}
 			$scope.despesa.itens.push(item);
-			delete $scope.item;
-			console.log($scope.despesa);
+			iniciaItem();
 		}
 
 		$scope.salvar = function (obj) {
-			alert('vc salvou');
+			console.log(obj);
 			inciaScope();
 		}
 

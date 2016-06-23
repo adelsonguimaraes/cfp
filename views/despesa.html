@@ -1,7 +1,7 @@
 <!-- Despesa -->
 <div class="container-fluid">
 	<div class="row">
-		<div class="col-md-4">
+		<div class="col-md-6">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					Lista de Despesas
@@ -11,6 +11,7 @@
 						<thead>
 							<tr>
 								<td>ID</td>
+								<td>Descrição</td>
 								<td>Data Aquisição</td>
 								<td>Dia Vencimento</td>
 								<td>Prestações</td>
@@ -20,7 +21,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-8">
+		<div class="col-md-6">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					Cadastro de Despesas
@@ -32,57 +33,63 @@
 						<div class="row">
 							<div class="col-md-4">
 								<div class="form-group">
-								 	<label class="label-control">Data Aquisição</label>
-									<input type="text" class="form-control" name="dataaquisicao" ng-model="despesa.dataaquisicao" ng-required="true">
+								 	<label class="label-control">Descrição</label>
+									<input type="text" class="form-control" name="descricao" ng-model="despesa.descricao" ng-required="true">
 								</div>
 							</div>
 							<div class="col-md-4">
 								<div class="form-group">
-								 	<label class="label-control">Dia Vencimento</label>
-									<input type="text" class="form-control" name="diavencimento" ng-model="despesa.diavencimento"  ng-required="true">
+								 	<label class="label-control">Data Aquisição</label>
+									<input type="text" class="form-control" name="dataaquisicao" ng-model="despesa.dataaquisicao" ng-required="true">
 								</div>
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-2">
+								<div class="form-group">
+								 	<label class="label-control">Dia Vencimento</label>
+								 	<h-number value="despesa.diavencimento" unit-position="left" min="1" max="31" step="1" ng-model="despesa.diavencimento"></h-number>
+								</div>
+							</div>
+							<div class="col-md-2">
 							 	<div class="form-group">
 							 		<label class="label-control">Prestações</label>
-							 		<input type="text" class="form-control" name="prestacoes" ng-model="despesa.prestacoes"  ng-required="true">
+							 		<h-number value="despesa.prestacao" unit-position="left" min="1" max="120" step="1" ng-model="despesa.prestacao"></h-number>
 							 	</div>
 						 	</div>
 						</div>
 						<h3>Itens da Despesa</h3>
 						<hr>
 						<div class="row">
-							<div class="col-md-4">
+							<div class="col-md-5">
 								<div class="form-group">
 								 	<label class="label-control">Descrição</label>
 									<input type="text" class="form-control" name="descricao" ng-model="item.descricao">
 								</div>
 							</div>
-							<div class="col-md-3">
+							<div class="col-md-2">
 								<div class="form-group">
 								 	<label class="label-control">Valor Unitário</label>
 									<input type="text" class="form-control" name="valor" ng-model="item.valor">
 								</div>
 							</div>
-							<div class="col-md-3">
+							<div class="col-md-2">
 								<div class="form-group">
 								 	<label class="label-control">Quantidade</label>
-									<input type="text" class="form-control" name="quantidade" ng-model="item.quantidade">
+									<h-number value="item.quantidade" unit-position="left" min="1" max="9999" step="1" ng-model="despesa.quantidade"></h-number>
 								</div>
 							</div>
-							<div class="col-md-2">
+							<div class="col-md-3">
 								<br>
 								<button class="btn btn-primary" type="button" ng-click="addItem(item)"><i class="fa fa-plus"></i> Adicionar Item</button>
 							</div>
 						</div>
 
-						<div class="bg-danger btn-lg" ng-if="!despesa.itens">
+						<div class="bg-danger btn-lg" ng-if="despesa.itens.length<=0">
 							<span class="text-danger">
-								Nenhuma despesa cadastrada
+								Nenhuma item cadastrado
 							</span>
 						</div>
 
-						<table class="table table-bordered table-striped">
+						<table class="table table-bordered table-striped" ng-if="despesa.itens.length>0">
 							<thead>
 								<tr>
 									<td>ID</td>
@@ -100,8 +107,8 @@
 									<td ng-bind="obj.quantidade"></td>
 									<td>
 										<div class="btn-group">
-											<button class="btn btn-warning" title="Editar"><i class="fa fa-pencil"></i></button>
-											<button class="btn btn-danger" title="Deletar"><i class="fa fa-trash"></i></button>
+											<button class="btn btn-warning" title="Editar"><i class="fa fa-pencil" ng-click="editaItem(obj)"></i></button>
+											<button class="btn btn-danger" title="Deletar"><i class="fa fa-trash" ng-click="deletaItem(obj)"></i></button>
 										</div>
 									</td>
 								</tr>
@@ -109,7 +116,7 @@
 						</table>
 
 						<hr>
-						<button class="btn btn-success pull-rigth" type="button" ng-click="salvar()" ng-disabled="form.$invalid || despesa.itens.length<=0">Salvar Despesa</button>
+						<button class="btn btn-success pull-rigth" type="button" ng-click="salvar(despesa)" ng-disabled="form.$invalid || despesa.itens.length<=0">Salvar Despesa</button>
 						<button class="btn btn-danger pull-rigth" type="button" ng-click="cancelar()">Cancelar</button>
 					</form>
 				</div>
