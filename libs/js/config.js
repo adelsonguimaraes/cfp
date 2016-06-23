@@ -30,24 +30,37 @@
 	            controller: "despesaCtrl",
 	            data: { pageTitle: 'Login', specialClass: 'gray-bg'},
 	            resolve: {
-                loadPlugin: function ($ocLazyLoad) {
-                    return $ocLazyLoad.load([
-                       {
-                            files: ['libs/js/plugins/moment/moment.min.js']
-                        },
-                        {
-                            name: 'datePicker',
-                            files: ['libs/css/plugins/datapicker/angular-datapicker.css','libs/js/plugins/datapicker/angular-datepicker.js']
-                        },
-                    ]);
-                }
-            }
+	                loadPlugin: function ($ocLazyLoad) {
+	                    return $ocLazyLoad.load([
+	                       {
+	                            files: ['libs/js/plugins/moment/moment.min.js']
+	                        },
+	                        {
+	                            name: 'datePicker',
+	                            files: ['libs/css/plugins/datapicker/angular-datapicker.css','libs/js/plugins/datapicker/angular-datepicker.js']
+	                        },
+	                    ]);
+	                }
+	            }
 	        })
 	        .state('recebimento', {
 	            url: "/recebimento",
 	            templateUrl: "views/recebimento.html",
-	            // controller: "homeCtrl",
+	            controller: "recebimentoCtrl",
 	            data: { pageTitle: 'Login', specialClass: 'gray-bg'},
+	            resolve: {
+	                loadPlugin: function ($ocLazyLoad) {
+	                    return $ocLazyLoad.load([
+	                       {
+	                            files: ['libs/js/plugins/moment/moment.min.js']
+	                        },
+	                        {
+	                            name: 'datePicker',
+	                            files: ['libs/css/plugins/datapicker/angular-datapicker.css','libs/js/plugins/datapicker/angular-datepicker.js']
+	                        },
+	                    ]);
+	                }
+	            }
 	        });
 	}
 

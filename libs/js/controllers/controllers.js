@@ -65,10 +65,38 @@
 		}
 	}
 
+	var recebimento = function ($scope) {
+		function startScope () {
+			$scope.recebimento = {
+				"id":"",
+				"descricao":"",
+				"valor":"",
+				"dataarrecadacao":moment().format('DD/MM/YYYY'),
+				"tipo":"UNICO",
+				"ativo":"sim"
+			}
+			$scope.novo = false;
+		}
+		startScope();
+
+		$scope.novoRecebimento = function () {
+			$scope.novo = true;
+		}
+
+		$scope.salvar = function (obj) {
+			console.log(obj);
+		}
+
+		$scope.cancelar = function () {
+			startScope();
+		}
+	}
+
 	angular
 		.module('cfp')
 		.controller('loginCtrl', login)
 		.controller('homeCtrl', home)
-		.controller('despesaCtrl', despesa);
+		.controller('despesaCtrl', despesa)
+		.controller('recebimentoCtrl', recebimento);
 
 })();
