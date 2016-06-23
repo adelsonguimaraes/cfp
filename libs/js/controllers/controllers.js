@@ -44,8 +44,8 @@
 				"valor":"",
 				"quantidade":1,
 				"prestacao":1,
-				"dataaquisicao":"",
-				"diavencimento":1,
+				"dataaquisicao": moment().format('DD/MM/YYYY'),
+				"datavencimento": moment().format('DD/MM/YYYY')
 			}
 			$scope.nova = false;
 		}
