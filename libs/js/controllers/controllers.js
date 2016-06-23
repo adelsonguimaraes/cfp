@@ -40,32 +40,19 @@
 		function inciaScope () {
 			$scope.despesa = {
 				"id":"",
-				"dataaquisicao":"",
-				"diavencimento":"",
-				"prestacao":"",
-				"itens": []
-			}
-		}
-		inciaScope();
-		function iniciaItem () {
-			$scope.item = {
-				"id":"",
 				"descricao":"",
 				"valor":"",
-				"quantidade":""
+				"quantidade":1,
+				"prestacao":1,
+				"dataaquisicao":"",
+				"diavencimento":1,
 			}
+			$scope.nova = false;
 		}
-		iniciaItem();
+		inciaScope();
 
-		$scope.addItem = function (obj) {
-			var item = {
-				"id":obj.id,
-				"descricao":obj.descricao,
-				"valor":obj.valor,
-				"quantidade":obj.quantidade
-			}
-			$scope.despesa.itens.push(item);
-			iniciaItem();
+		$scope.novaDespesa = function () {
+			$scope.nova = true;
 		}
 
 		$scope.salvar = function (obj) {
