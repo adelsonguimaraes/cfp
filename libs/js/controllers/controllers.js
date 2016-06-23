@@ -35,9 +35,45 @@
 		console.log('eu sou a home');
 	}
 
+	var despesa = function ($scope) {
+		
+		function inciaScope () {
+			$scope.despesa = {
+				"id":"",
+				"dataaquisicao":"",
+				"diavencimento":"",
+				"prestacoes":"",
+				"itens": []
+			}
+		}
+		inciaScope();
+
+		$scope.addItem = function (obj) {
+			var item = {
+				"id":obj.id,
+				"descricao":obj.descricao,
+				"valor":obj.valor,
+				"quantidade":obj.quantidade
+			}
+			$scope.despesa.itens.push(item);
+			delete $scope.item;
+			console.log($scope.despesa);
+		}
+
+		$scope.salvar = function (obj) {
+			alert('vc salvou');
+			inciaScope();
+		}
+
+		$scope.cancelar = function () {
+			inciaScope();
+		}
+	}
+
 	angular
 		.module('cfp')
 		.controller('loginCtrl', login)
-		.controller('homeCtrl', home);
+		.controller('homeCtrl', home)
+		.controller('despesaCtrl', despesa);
 
 })();

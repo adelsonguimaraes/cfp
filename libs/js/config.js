@@ -27,7 +27,7 @@
 	        .state('despesa', {
 	            url: "/despesa",
 	            templateUrl: "views/despesa.html",
-	            // controller: "homeCtrl",
+	            controller: "despesaCtrl",
 	            data: { pageTitle: 'Login', specialClass: 'gray-bg'},
 	        })
 	        .state('recebimento', {
