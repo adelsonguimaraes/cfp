@@ -11,6 +11,7 @@
 if(!$_POST){
 	if($_GET) {$_POST = $_GET;}
 	else{$_POST =  file_get_contents ( 'php://input' );}}
+$_POST =  json_decode($_POST, true);
 
 // conexao
 require_once("../util/Conexao.php");

@@ -4,7 +4,25 @@
 	
 	"use strict"
 
-	var login = function ($scope, $location, authenticationAPI) {
+	/*******************************************
+			Controller Main
+	*******************************************/
+	var main = function ($location, $rootScope, authenticationAPI) {
+
+	    var root = $rootScope;
+
+	    root.api = "http://api.nuvio.com.br"; //variavel de api global
+	    root.usuario = ""; //startando variavel global usuario
+
+	    // authenticationAPI.verificaSessao();
+	    authenticationAPI.sessionCtrl();
+
+	}
+
+	/*******************************************
+			Controller de Login
+	*******************************************/
+	var login = function ($scope, $rootScope, $location, authenticationAPI) {
 		
 		$scope.logar = function (obj) {
 			var data = {
@@ -31,11 +49,17 @@
 		}
 	}
 
+	/*******************************************
+			Controller de Home
+	*******************************************/
 	var home = function ($scope) {
 		console.log('eu sou a home');
 	}
 
-	var despesa = function ($scope) {
+	/*******************************************
+			Controller de Despesa
+	*******************************************/
+	var despesa = function ($scope, $rootScope, genericAPI) {
 		
 		function inciaScope () {
 			$scope.despesa = {
@@ -55,8 +79,49 @@
 			$scope.nova = true;
 		}
 
+		$scope.listar = function () {
+			var data = {
+				"metodo":"listar",
+				"class":"despesa"
+			};
+			genericAPI.generic(data)
+				.then(function successCallback(response) {
+					//se o sucesso === true
+					if(response.data.success == true){
+			        	$scope.despesas = response.data.data;
+		            }else{
+		                //ativamos o login error com true
+		  
+		            }
+		        }, function errorCallback(response) {
+		        	//error
+				});	
+
+		}
+
 		$scope.salvar = function (obj) {
-			console.log(obj);
+			
+			obj.idusuario = $rootScope.usuario.idusuario;
+			
+			var data = {
+				"metodo":"cadastrar",
+				"data":obj,
+				"class":"despesa"
+			};
+			genericAPI.generic(data)
+				.then(function successCallback(response) {
+					//se o sucesso === true
+					if(response.data.success == true){
+		                //criamos a session
+		            	
+		            }else{
+		                //ativamos o login error com true
+		            	
+		            }
+		        }, function errorCallback(response) {
+		        	//error
+				});	
+
 			inciaScope();
 		}
 
@@ -65,7 +130,10 @@
 		}
 	}
 
-	var recebimento = function ($scope) {
+	/*******************************************
+			Controller de Recebimento
+	*******************************************/
+	var recebimento = function ($scope, $rootScope) {
 		function startScope () {
 			$scope.recebimento = {
 				"id":"",
@@ -94,6 +162,7 @@
 
 	angular
 		.module('cfp')
+		.controller('mainCtrl', main)
 		.controller('loginCtrl', login)
 		.controller('homeCtrl', home)
 		.controller('despesaCtrl', despesa)

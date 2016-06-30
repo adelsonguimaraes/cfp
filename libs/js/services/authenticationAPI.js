@@ -1,6 +1,8 @@
 //service
 (function () {
 
+	"use strict"
+
 	angular.module('cfp').service("authenticationAPI", function ($q, $location, $rootScope, $http) {
 	
 		function _authentication (data) {
