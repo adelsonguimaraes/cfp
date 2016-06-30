@@ -41,8 +41,8 @@ function cadastrar () {
 		$data['quantidade'],
 		$data['prestacoes'],
 		$data['dataaquisicao'],
-		$data['datavencimento'],
-		$data['ativo']
+		$data['datavencimento']
+		// $data['ativo']
 	);
 	$control = new DespesaControl($obj);
 	$id = $control->cadastrar();
@@ -73,8 +73,8 @@ function atualizar () {
 		$data['quantidade'],
 		$data['prestacoes'],
 		$data['dataaquisicao'],
-		$data['datavencimento'],
-		$data['ativo']
+		$data['datavencimento']
+		// $data['ativo']
 	);
 	$control = new DespesaControl($obj);
 	$id = $control->atualizar();

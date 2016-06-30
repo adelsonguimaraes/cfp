@@ -67,7 +67,7 @@
 				"descricao":"",
 				"valor":"",
 				"quantidade":1,
-				"prestacao":1,
+				"prestacoes":1,
 				"dataaquisicao": moment().format('DD/MM/YYYY'),
 				"datavencimento": moment().format('DD/MM/YYYY')
 			}
@@ -86,25 +86,37 @@
 			};
 			genericAPI.generic(data)
 				.then(function successCallback(response) {
-					//se o sucesso === true
-					if(response.data.success == true){
-			        	$scope.despesas = response.data.data;
-		            }else{
-		                //ativamos o login error com true
-		  
-		            }
+					if(response.data.length>0){
+			        	$scope.despesas = response.data;
+			        }
 		        }, function errorCallback(response) {
 		        	//error
 				});	
 
+		}
+		$scope.listar();
+
+		$scope.editar = function (obj) {
+			obj.dataaquisicao = moment(obj.dataaquisicao).format('DD/MM/YYYY');
+			obj.datavencimento = moment(obj.datavencimento).format('DD/MM/YYYY');
+			obj.quantidade = parseInt(obj.quantidade);
+			obj.prestacoes = parseInt(obj.prestacoes);
+			$scope.despesa = obj;
+			$scope.novaDespesa();
 		}
 
 		$scope.salvar = function (obj) {
 			
 			obj.idusuario = $rootScope.usuario.idusuario;
 			
+			var metodo = "cadastrar";
+			if(obj.id) metodo = "atualizar";
+			
+			obj.dataaquisicao = obj.dataaquisicao.substr(6)+'-'+obj.dataaquisicao.substr(3,2)+'-'+obj.dataaquisicao.substr(0,2);
+			obj.datavencimento = obj.datavencimento.substr(6)+'-'+obj.datavencimento.substr(3,2)+'-'+obj.datavencimento.substr(0,2);
+
 			var data = {
-				"metodo":"cadastrar",
+				"metodo":metodo,
 				"data":obj,
 				"class":"despesa"
 			};
@@ -123,6 +135,7 @@
 				});	
 
 			inciaScope();
+			$scope.listar();
 		}
 
 		$scope.cancelar = function () {

@@ -4,7 +4,7 @@
 		<div class="col-md-12" ng-if="!nova">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					Lista de Despesas
+					<h3>Lista de Despesas</h3>
 				</div>
 				<div class="panel-body">
 					<div class="bg-danger btn-lg" ng-if="!despesas">
@@ -15,11 +15,36 @@
 							<tr>
 								<td>ID</td>
 								<td>Descrição</td>
+								<td>Valor</td>
+								<td>Quantidade</td>
+								<td>Prestações</td>
 								<td>Data Aquisição</td>
 								<td>Vencimento</td>
-								<td>Prestações</td>
+								<td>Ações</td>
 							</tr>
 						</thead>
+						<tbody>
+							<tr ng-repeat="obj in despesas">
+								<td ng-bind="obj.id"></td>
+								<td ng-bind="obj.descricao"></td>
+								<td ng-bind="obj.valor"></td>
+								<td ng-bind="obj.quantidade"></td>
+								<td ng-bind="obj.prestacoes"></td>
+								<td ng-bind="obj.dataaquisicao | data"></td>
+								<td ng-bind="obj.datavencimento | data"></td>
+								<td>
+									<div class="btn-group">
+										<button class="btn btn-warning" type="button" ng-click="editar(obj)"><i class="fa fa-pencil"  ng-click="deletar(obj)"></i></button>
+										<button class="btn btn-danger" type="button"><i class="fa fa-trash"></i></button>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr><td colspan="8">
+								<button class="btn btn-default pull-right" type="button" ng-click="listar()">Refresh <i class="fa fa-refresh"></i></button>
+							</td></tr>
+						</tfoot>
 					</table>
 					<hr>
 					<button class="btn btn-primary" ng-click="novaDespesa()"><i class="fa fa-plus"></i> Nova despesa</button>
