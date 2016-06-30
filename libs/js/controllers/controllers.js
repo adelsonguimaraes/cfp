@@ -122,20 +122,29 @@
 			};
 			genericAPI.generic(data)
 				.then(function successCallback(response) {
-					//se o sucesso === true
-					if(response.data.success == true){
-		                //criamos a session
-		            	
-		            }else{
-		                //ativamos o login error com true
-		            	
-		            }
+					//success
+					inciaScope();
+					$scope.listar();
 		        }, function errorCallback(response) {
 		        	//error
 				});	
+		}
 
-			inciaScope();
-			$scope.listar();
+		$scope.deletar = function (obj) {
+			
+			var data = {
+				"metodo":"deletar",
+				"data":obj,
+				"class":"despesa"
+			};
+			genericAPI.generic(data)
+				.then(function successCallback(response) {
+					//success
+					inciaScope();
+					$scope.listar();
+		        }, function errorCallback(response) {
+		        	//error
+				});	
 		}
 
 		$scope.cancelar = function () {

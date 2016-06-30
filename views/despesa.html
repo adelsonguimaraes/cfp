@@ -10,7 +10,7 @@
 					<div class="bg-danger btn-lg" ng-if="!despesas">
 						<span class="text-danger">Nenhuma despesa registrada</span>
 					</div>
-					<table class="table table-bordered table-striped"  ng-if="despesas">
+					<table class="table table-bordered table-striped table-hover"  ng-if="despesas">
 						<thead>
 							<tr>
 								<td>ID</td>
@@ -34,14 +34,15 @@
 								<td ng-bind="obj.datavencimento | data"></td>
 								<td>
 									<div class="btn-group">
-										<button class="btn btn-warning" type="button" ng-click="editar(obj)"><i class="fa fa-pencil"  ng-click="deletar(obj)"></i></button>
-										<button class="btn btn-danger" type="button"><i class="fa fa-trash"></i></button>
+										<button class="btn btn-warning" type="button" ng-click="editar(obj)"><i class="fa fa-pencil"></i></button>
+										<button class="btn btn-danger" type="button" ng-click="deletar(obj)"><i class="fa fa-trash"></i></button>
 									</div>
 								</td>
 							</tr>
 						</tbody>
 						<tfoot>
 							<tr><td colspan="8">
+								<label class="label-control">Registros encontrados ({{despesas.length}})</label>
 								<button class="btn btn-default pull-right" type="button" ng-click="listar()">Refresh <i class="fa fa-refresh"></i></button>
 							</td></tr>
 						</tfoot>
