@@ -23,6 +23,12 @@
 			Controller de Login
 	*******************************************/
 	var login = function ($scope, $rootScope, $location, authenticationAPI) {
+
+		//verifica sessao
+		if($rootScope.usuario) {
+			$location.path('/home');
+			return false;
+		}
 		
 		$scope.logar = function (obj) {
 			var data = {
@@ -52,14 +58,27 @@
 	/*******************************************
 			Controller de Home
 	*******************************************/
-	var home = function ($scope) {
+	var home = function ($scope, $rootScope, $location, genericAPI) {
+
+		//verifica sessao
+		if(!$rootScope.usuario) {
+			$location.path('/login');
+			return false;
+		}
+
 		console.log('eu sou a home');
 	}
 
 	/*******************************************
 			Controller de Despesa
 	*******************************************/
-	var despesa = function ($scope, $rootScope, genericAPI) {
+	var despesa = function ($scope, $rootScope, $location, genericAPI) {
+
+		//verifica sessao
+		if(!$rootScope.usuario) {
+			$location.path('/login');
+			return false;
+		}
 		
 		function inciaScope () {
 			$scope.despesa = {
@@ -155,7 +174,14 @@
 	/*******************************************
 			Controller de Recebimento
 	*******************************************/
-	var recebimento = function ($scope, $rootScope) {
+	var recebimento = function ($scope, $rootScope, $location, genericAPI) {
+		
+		//verifica sessao
+		if(!$rootScope.usuario) {
+			$location.path('/login');
+			return false;
+		}
+
 		function startScope () {
 			$scope.recebimento = {
 				"id":"",
