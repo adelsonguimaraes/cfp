@@ -1,8 +1,40 @@
 <!-- Home -->
 <div class="container">
 	<div class="row">
-		<div class="col-md-12" align="center">
-			
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					Cronograma
+				</div>
+				<div class="panel-body">
+					<table class="table table-striped table-bordered table-hover">
+						<thead>
+							<tr>
+								<td colspan="100">Head</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Descrição</td>
+								<td>Valor</td>
+								<td ng-repeat="mes in meses">{{mes.nome}}</td>
+								
+							</tr>
+							<tr ng-repeat="despesa in despesas">
+								<td ng-bind="despesa.descricao"></td>
+								<td ng-bind="despesa.valor"></td>
+								<td ng-repeat="pres in despesa.pres">{{pres}}</td>
+								
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<td colspan="100">Footer</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

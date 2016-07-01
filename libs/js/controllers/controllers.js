@@ -66,7 +66,62 @@
 			return false;
 		}
 
-		console.log('eu sou a home');
+		var meses = [
+			{"nome":"Janeiro",	"sigla":"JAN"},
+			{"nome":"Fevereiro",	"sigla":"FEV"},
+			{"nome":"Março", 		"sigla":"MAR"},
+			{"nome":"Abril", 		"sigla":"ABRIL"},
+			{"nome":"Maio",	 	"sigla":"MAIO"},
+			{"nome":"Junho", 		"sigla":"JUN"},
+			{"nome":"Julho", 		"sigla":"JUL"},
+			{"nome":"Agosto", 	"sigla":"AGOS"},
+			{"nome":"Setembro", 	"sigla":"SET"},
+			{"nome":"Outubro", 	"sigla":"OUT"},
+			{"nome":"Novembro", 	"sigla":"NOV"},
+			{"nome":"Dezembro", 	"sigla":"DEZ"}
+		];
+
+		$scope.meses = [];
+
+		function carregaMeses () {
+			var now = new Date();
+			var count = now.getMonth();
+			var total = count + 8;
+			while (count < 12) {
+				$scope.meses.push(meses[count]);
+				count++;
+			}
+			var resto = total - count;
+			count = 0;
+			while (count < resto) {
+				$scope.meses.push(meses[count]);
+				count++;
+			}
+		}
+		carregaMeses ();
+
+		$scope.despesas = [
+			{"descricao":"Tênis", "valor":"90", "prestacoes":"5"},
+			{"descricao":"Carro", "valor":"450", "prestacoes":"25"},
+			{"descricao":"Bolsa", "valor":"70", "prestacoes":"0"},
+			{"descricao":"Oculos", "valor":"180", "prestacoes":"2"},
+			{"descricao":"Notebook", "valor":"2000", "prestacoes":"10"}
+		];
+
+		for (var x in $scope.despesas) {
+			var qtdpres = $scope.despesas[x].prestacoes;
+			var count = 0;
+			$scope.despesas[x].pres = [];
+			while (count < 8) {
+				if (count <= qtdpres) {
+					$scope.despesas[x].pres.push($scope.despesas[x].descricao);
+				}else{
+					$scope.despesas[x].pres.push('');
+				}
+				count++;
+			}
+		}
+		console.log($scope.despesas);
 	}
 
 	/*******************************************
