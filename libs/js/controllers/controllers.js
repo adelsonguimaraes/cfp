@@ -101,21 +101,23 @@
 		carregaMeses ();
 
 		$scope.despesas = [
-			{"descricao":"Tênis", "valor":"90", "prestacoes":"5", "datavencimento":"05/"},
-			{"descricao":"Carro", "valor":"450", "prestacoes":"25"},
-			{"descricao":"Bolsa", "valor":"70", "prestacoes":"0"},
-			{"descricao":"Oculos", "valor":"180", "prestacoes":"2"},
-			{"descricao":"Notebook", "valor":"2000", "prestacoes":"10"}
+			{"descricao":"Tênis", "valor":"90", "prestacoes":"5", "datavencimento":"05/07/2016"},
+			{"descricao":"Carro", "valor":"450", "prestacoes":"25", "datavencimento":"01/07/2016"},
+			{"descricao":"Bolsa", "valor":"70", "prestacoes":"0", "datavencimento":"08/07/2016"},
+			{"descricao":"Oculos", "valor":"180", "prestacoes":"2", "datavencimento":"20/07/2016"},
+			{"descricao":"Notebook", "valor":"2000", "prestacoes":"10", "datavencimento":"15/07/2016"}
 		];
 
 		$scope.totais = [{"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}];
 		$scope.totalgeral = 0;
 
-
 		for (var x in $scope.despesas) {
 			var qtdpres = $scope.despesas[x].prestacoes;
 			var count = 0;
 			$scope.despesas[x].pres = [];
+
+			// console.log($scope.despesas[x].datavencimento.substr(0,2));
+
 			for (var z=0; z<8; z++) {
 				if (count <= qtdpres) {
 					$scope.despesas[x].pres.push({"valor":$scope.despesas[x].valor});
