@@ -101,27 +101,37 @@
 		carregaMeses ();
 
 		$scope.despesas = [
-			{"descricao":"Tênis", "valor":"90", "prestacoes":"5"},
+			{"descricao":"Tênis", "valor":"90", "prestacoes":"5", "datavencimento":"05/"},
 			{"descricao":"Carro", "valor":"450", "prestacoes":"25"},
 			{"descricao":"Bolsa", "valor":"70", "prestacoes":"0"},
 			{"descricao":"Oculos", "valor":"180", "prestacoes":"2"},
 			{"descricao":"Notebook", "valor":"2000", "prestacoes":"10"}
 		];
 
+		$scope.totais = [{"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}];
+		$scope.totalgeral = 0;
+
+
 		for (var x in $scope.despesas) {
 			var qtdpres = $scope.despesas[x].prestacoes;
 			var count = 0;
 			$scope.despesas[x].pres = [];
-			while (count < 8) {
+			for (var z=0; z<8; z++) {
 				if (count <= qtdpres) {
-					$scope.despesas[x].pres.push($scope.despesas[x].descricao);
+					$scope.despesas[x].pres.push({"valor":$scope.despesas[x].valor});
+					$scope.totais[z].valor = $scope.totais[z].valor +  parseInt($scope.despesas[x].valor);
+					if($scope.totais[z-1] != undefined && $scope.totais[z].valor < $scope.totais[z-1].valor) {
+						$scope.totais[z].icon = "fa-arrow-down";
+					}else if($scope.totais[z-1] != undefined && $scope.totais[z].valor > $scope.totais[z-1].valor) {
+						$scope.totais[z].icon = "fa-arrow-up";
+					}
 				}else{
-					$scope.despesas[x].pres.push('');
+					$scope.despesas[x].pres.push({"valor":"xxxx"});
 				}
 				count++;
 			}
+			$scope.totalgeral = $scope.totalgeral + parseFloat($scope.despesas[x].valor);
 		}
-		console.log($scope.despesas);
 	}
 
 	/*******************************************

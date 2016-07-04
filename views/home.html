@@ -7,7 +7,8 @@
 					Cronograma
 				</div>
 				<div class="panel-body">
-					<table class="table table-striped table-bordered table-hover">
+					<div class="table-responsive">
+					<table class="table table-bordered table-hover">
 						<thead>
 							<tr>
 								<td colspan="100">Head</td>
@@ -15,16 +16,26 @@
 						</thead>
 						<tbody>
 							<tr>
-								<td>Descrição</td>
-								<td>Valor</td>
-								<td ng-repeat="mes in meses">{{mes.nome}}</td>
+								<td style="background:#afc2f3;">Descrição</td>
+								<td style="background:#afc2f3;">Valor</td>
+								<td style="background:#afc2f3;">Venc</td>
+								<td ng-repeat="mes in meses" style="background:#bce7e6;">{{mes.nome}}</td>
 								
 							</tr>
 							<tr ng-repeat="despesa in despesas">
 								<td ng-bind="despesa.descricao"></td>
 								<td ng-bind="despesa.valor"></td>
-								<td ng-repeat="pres in despesa.pres">{{pres}}</td>
-								
+								<td>03</td>
+								<td ng-repeat="pres in despesa.pres">{{pres.valor}}</td>
+							</tr>
+							<tr>
+								<td style="background:#afc2f3;">Total</td>
+								<td style="background:#afc2f3;">{{totalgeral}}</td>
+								<td style="background:#afc2f3;"></td>
+								<td ng-repeat="total in totais" style="background:#f9e7aa;">
+									{{total.valor}}
+									<i class="fa" ng-class="total.icon"></i>
+								</td>
 							</tr>
 						</tbody>
 						<tfoot>
@@ -33,6 +44,7 @@
 							</tr>
 						</tfoot>
 					</table>
+					</div>
 				</div>
 			</div>
 		</div>
