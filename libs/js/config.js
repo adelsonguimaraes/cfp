@@ -23,6 +23,15 @@
 	            templateUrl: "views/home.html",
 	            controller: "homeCtrl",
 	            data: { pageTitle: 'Login', specialClass: 'gray-bg'},
+	            resolve: {
+	                loadPlugin: function ($ocLazyLoad) {
+	                    return $ocLazyLoad.load([
+	                       	{
+	                            files: ['libs/js/plugins/moment/moment.min.js']
+	                        }
+	                    ]);
+	                }
+	            }
 	        })
 	        .state('despesa', {
 	            url: "/despesa",
@@ -32,7 +41,7 @@
 	            resolve: {
 	                loadPlugin: function ($ocLazyLoad) {
 	                    return $ocLazyLoad.load([
-	                       {
+	                       	{
 	                            files: ['libs/js/plugins/moment/moment.min.js']
 	                        },
 	                        {

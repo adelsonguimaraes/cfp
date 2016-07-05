@@ -74,7 +74,7 @@
 			{"nome":"Maio",	 	"sigla":"MAIO"},
 			{"nome":"Junho", 		"sigla":"JUN"},
 			{"nome":"Julho", 		"sigla":"JUL"},
-			{"nome":"Agosto", 	"sigla":"AGOS"},
+			{"nome":"Agosto", 	"sigla":"AGO"},
 			{"nome":"Setembro", 	"sigla":"SET"},
 			{"nome":"Outubro", 	"sigla":"OUT"},
 			{"nome":"Novembro", 	"sigla":"NOV"},
@@ -101,79 +101,61 @@
 		carregaMeses ();
 
 		$scope.despesas = [
-			{"descricao":"Tênis", "valor":"90", "prestacoes":"5", "datavencimento":"05/07/2016"},
-			{"descricao":"Mouse Razor", "valor":"150", "prestacoes":"3", "datavencimento":"05/07/2016"},
-			{"descricao":"Carro", "valor":"450", "prestacoes":"25", "datavencimento":"01/07/2016"},
-			{"descricao":"Bolsa", "valor":"70", "prestacoes":"0", "datavencimento":"08/07/2016"},
-			{"descricao":"Oculos", "valor":"180", "prestacoes":"2", "datavencimento":"20/07/2016"},
-			{"descricao":"Notebook", "valor":"2000", "prestacoes":"10", "datavencimento":"15/07/2016"},
-			{"descricao":"Meia", "valor":"2000", "prestacoes":"10", "datavencimento":"15/08/2016"}
+			{"descricao":"Tênis", "valor":"90", "prestacoes":"5", "datavencimento":"2016-07-05"},
+			{"descricao":"Mouse Razor", "valor":"150", "prestacoes":"3", "datavencimento":"2016-07-05"},
+			{"descricao":"Carro", "valor":"450", "prestacoes":"25", "datavencimento":"2016-07-01"},
+			{"descricao":"Bolsa", "valor":"70", "prestacoes":"0", "datavencimento":"2016-07-08"},
+			{"descricao":"Oculos", "valor":"180", "prestacoes":"2", "datavencimento":"2016-07-20"},
+			{"descricao":"Notebook", "valor":"2000", "prestacoes":"10", "datavencimento":"2016-07-15"},
+			{"descricao":"Meia", "valor":"2000", "prestacoes":"7", "datavencimento":"2016-09-15"}
 		];
 
 		$scope.totais = [{"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}];
 		$scope.totalgeral = 0;
 
-		var diasMes = [];
-
-		// separa dias
-		for (var x in $scope.despesas) {
-			var dia = parseInt($scope.despesas[x].datavencimento.substr(0,2));
-			var count = 0;
-			if (!diasMes.length) {
-				diasMes.push(dia);
-			}else{
-				for(var y in diasMes) {
-					if (dia === diasMes[y]) {
-						count++;
+		function ordenaDatas (despesas) {
+			var datas = despesas;
+			var array = [];
+			while (datas.length > 0) {
+				var num = {"datavencimento":"9999/12/31"};
+				var pos = 0;
+				for (var x in datas) {
+					if (moment(datas[x].datavencimento)._d.getTime() < moment(num.datavencimento)._d.getTime()) {
+						num = datas[x];
+						num.diavencimento = num.datavencimento.substr(8,2);
+						pos = x;
 					}
 				}
-				if (count<=0) diasMes.push(dia);
+				array.push(num);
+				datas.splice( pos, 1 );
 			}
+			$scope.despesas = array;
 		}
-		
-		var array = [];
-		// ordenando numericamente
-		while (diasMes.length > 0) {
-			var num = {"num":999, "pos":0};
-			for (var x in diasMes) {
-				if(diasMes[x] < num.num) {
-					num.num = diasMes[x];
-					num.pos = x;
-				}
-			}
-			array.push(num.num);
-			diasMes.splice(num.pos, 1);
-		}
-		diasMes = array;
-		
-		array = [];
-		for (var x in diasMes) {
-			for (var y in $scope.despesas) {
-				var dia = parseInt($scope.despesas[y].datavencimento.substr(0,2));
-				if (dia === diasMes[x]) {
-					$scope.despesas[y].diavencimento = $scope.despesas[y].datavencimento.substr(0,2);
-					array.push($scope.despesas[y]);
-				}
-			}
-		} 
-
-		$scope.despesas = array;
+		ordenaDatas ($scope.despesas);
 
 		for (var x in $scope.despesas) {
 			var qtdpres = $scope.despesas[x].prestacoes;
 			var count = 0;
+			var now = moment();
+			
 			$scope.despesas[x].pres = [];
 
-			// console.log($scope.despesas[x].datavencimento.substr(0,2));
 
 			for (var z=0; z<8; z++) {
-				if (count <= qtdpres) {
-					$scope.despesas[x].pres.push({"valor":$scope.despesas[x].valor});
-					$scope.totais[z].valor = $scope.totais[z].valor +  parseInt($scope.despesas[x].valor);
-					if($scope.totais[z-1] != undefined && $scope.totais[z].valor < $scope.totais[z-1].valor) {
-						$scope.totais[z].icon = "fa-arrow-down";
-					}else if($scope.totais[z-1] != undefined && $scope.totais[z].valor > $scope.totais[z-1].valor) {
-						$scope.totais[z].icon = "fa-arrow-up";
+				console.log(moment($scope.despesas[x].datavencimento).add(z, "M")._d.getMonth());
+
+				if (moment($scope.despesas[x].datavencimento).add(z, "M")._d.getMonth() == now._d.getMonth()) {
+
+					if (count <= qtdpres) {
+						$scope.despesas[x].pres.push({"valor":$scope.despesas[x].valor});
+						$scope.totais[z].valor = $scope.totais[z].valor +  parseInt($scope.despesas[x].valor);
+						if($scope.totais[z-1] != undefined && $scope.totais[z].valor < $scope.totais[z-1].valor) {
+							$scope.totais[z].icon = "fa-arrow-down";
+						}else if($scope.totais[z-1] != undefined && $scope.totais[z].valor > $scope.totais[z-1].valor) {
+							$scope.totais[z].icon = "fa-arrow-up";
+						}
+					}else{
+						$scope.despesas[x].pres.push({"valor":"xxxx"});
 					}
 				}else{
 					$scope.despesas[x].pres.push({"valor":"xxxx"});
