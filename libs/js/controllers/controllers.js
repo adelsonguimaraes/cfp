@@ -102,14 +102,62 @@
 
 		$scope.despesas = [
 			{"descricao":"Tênis", "valor":"90", "prestacoes":"5", "datavencimento":"05/07/2016"},
+			{"descricao":"Mouse Razor", "valor":"150", "prestacoes":"3", "datavencimento":"05/07/2016"},
 			{"descricao":"Carro", "valor":"450", "prestacoes":"25", "datavencimento":"01/07/2016"},
 			{"descricao":"Bolsa", "valor":"70", "prestacoes":"0", "datavencimento":"08/07/2016"},
 			{"descricao":"Oculos", "valor":"180", "prestacoes":"2", "datavencimento":"20/07/2016"},
-			{"descricao":"Notebook", "valor":"2000", "prestacoes":"10", "datavencimento":"15/07/2016"}
+			{"descricao":"Notebook", "valor":"2000", "prestacoes":"10", "datavencimento":"15/07/2016"},
+			{"descricao":"Meia", "valor":"2000", "prestacoes":"10", "datavencimento":"15/08/2016"}
 		];
 
 		$scope.totais = [{"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}];
 		$scope.totalgeral = 0;
+
+		var diasMes = [];
+
+		// separa dias
+		for (var x in $scope.despesas) {
+			var dia = parseInt($scope.despesas[x].datavencimento.substr(0,2));
+			var count = 0;
+			if (!diasMes.length) {
+				diasMes.push(dia);
+			}else{
+				for(var y in diasMes) {
+					if (dia === diasMes[y]) {
+						count++;
+					}
+				}
+				if (count<=0) diasMes.push(dia);
+			}
+		}
+		
+		var array = [];
+		// ordenando numericamente
+		while (diasMes.length > 0) {
+			var num = {"num":999, "pos":0};
+			for (var x in diasMes) {
+				if(diasMes[x] < num.num) {
+					num.num = diasMes[x];
+					num.pos = x;
+				}
+			}
+			array.push(num.num);
+			diasMes.splice(num.pos, 1);
+		}
+		diasMes = array;
+		
+		array = [];
+		for (var x in diasMes) {
+			for (var y in $scope.despesas) {
+				var dia = parseInt($scope.despesas[y].datavencimento.substr(0,2));
+				if (dia === diasMes[x]) {
+					$scope.despesas[y].diavencimento = $scope.despesas[y].datavencimento.substr(0,2);
+					array.push($scope.despesas[y]);
+				}
+			}
+		} 
+
+		$scope.despesas = array;
 
 		for (var x in $scope.despesas) {
 			var qtdpres = $scope.despesas[x].prestacoes;

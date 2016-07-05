@@ -25,7 +25,7 @@
 							<tr ng-repeat="despesa in despesas">
 								<td ng-bind="despesa.descricao"></td>
 								<td ng-bind="despesa.valor"></td>
-								<td>03</td>
+								<td ng-bind="despesa.diavencimento"></td>
 								<td ng-repeat="pres in despesa.pres">{{pres.valor}}</td>
 							</tr>
 							<tr>
