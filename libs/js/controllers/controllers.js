@@ -136,29 +136,56 @@
 		for (var x in $scope.despesas) {
 			var qtdpres = $scope.despesas[x].prestacoes;
 			var count = 0;
+			var countMes = 0;
+			
+
+			for (var m=0; m<8; m++) {
+				var now = moment();
+				var month = now.add(m, "M").month();
+				for (var p=0; p<qtdpres; p++) {
+					var datavencimento = moment($scope.despesas[x].datavencimento);
+					var mes = datavencimento.add(p, "M")._d.getMonth();
+					var dia = datavencimento._d.getDate();
+					
+					if(mes == month) {
+						console.log($scope.despesas[x].descricao);
+						console.log(now.add(m, "M").month());
+					}
+				}
+			}
+		}
+
+		for (var x in $scope.despesas) {
+			var qtdpres = $scope.despesas[x].prestacoes;
+			var datavencimento = $scope.despesas[x].datavencimento;
+			var count = 0;
+			var countMes = 0;
 			var now = moment();
 			
 			$scope.despesas[x].pres = [];
 
-
+			// laco para o total de meses 8
 			for (var z=0; z<8; z++) {
-				console.log(moment($scope.despesas[x].datavencimento).add(z, "M")._d.getMonth());
+				
+				// laco para total de prestacoes
+				for (var p=0; p<$scope.despesas[x].prestacoes; p++) {
 
-				if (moment($scope.despesas[x].datavencimento).add(z, "M")._d.getMonth() == now._d.getMonth()) {
+						if (moment($scope.despesas[x].datavencimento).add(p, "M")._d.getMonth() == now.add(z, "M")._d.getMonth()) {
 
-					if (count <= qtdpres) {
-						$scope.despesas[x].pres.push({"valor":$scope.despesas[x].valor});
-						$scope.totais[z].valor = $scope.totais[z].valor +  parseInt($scope.despesas[x].valor);
-						if($scope.totais[z-1] != undefined && $scope.totais[z].valor < $scope.totais[z-1].valor) {
-							$scope.totais[z].icon = "fa-arrow-down";
-						}else if($scope.totais[z-1] != undefined && $scope.totais[z].valor > $scope.totais[z-1].valor) {
-							$scope.totais[z].icon = "fa-arrow-up";
+							if (count <= qtdpres) {
+								$scope.despesas[x].pres.push({"valor":$scope.despesas[x].valor});
+								$scope.totais[z].valor = $scope.totais[z].valor +  parseInt($scope.despesas[x].valor);
+								if($scope.totais[z-1] != undefined && $scope.totais[z].valor < $scope.totais[z-1].valor) {
+									$scope.totais[z].icon = "fa-arrow-down";
+								}else if($scope.totais[z-1] != undefined && $scope.totais[z].valor > $scope.totais[z-1].valor) {
+									$scope.totais[z].icon = "fa-arrow-up";
+								}
+							}else{
+								$scope.despesas[x].pres.push({"valor":"xxxx"});
+							}
+						}else{
+							$scope.despesas[x].pres.push({"valor":"xxxx"});
 						}
-					}else{
-						$scope.despesas[x].pres.push({"valor":"xxxx"});
-					}
-				}else{
-					$scope.despesas[x].pres.push({"valor":"xxxx"});
 				}
 				count++;
 			}
