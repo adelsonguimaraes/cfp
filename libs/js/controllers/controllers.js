@@ -104,7 +104,7 @@
 			{"descricao":"Tênis", "valor":"90", "prestacoes":"5", "datavencimento":"2016-07-05"},
 			{"descricao":"Mouse Razor", "valor":"150", "prestacoes":"3", "datavencimento":"2016-07-05"},
 			{"descricao":"Carro", "valor":"450", "prestacoes":"25", "datavencimento":"2016-07-01"},
-			{"descricao":"Bolsa", "valor":"70", "prestacoes":"0", "datavencimento":"2016-07-08"},
+			{"descricao":"Bolsa", "valor":"70", "prestacoes":"1", "datavencimento":"2016-07-08"},
 			{"descricao":"Oculos", "valor":"180", "prestacoes":"2", "datavencimento":"2016-07-20"},
 			{"descricao":"Notebook", "valor":"2000", "prestacoes":"10", "datavencimento":"2016-07-15"},
 			{"descricao":"Meia", "valor":"2000", "prestacoes":"7", "datavencimento":"2016-09-15"}
@@ -133,63 +133,45 @@
 		}
 		ordenaDatas ($scope.despesas);
 
+		// contruindo tabelas de mes
+
 		for (var x in $scope.despesas) {
-			var qtdpres = $scope.despesas[x].prestacoes;
-			var count = 0;
-			var countMes = 0;
-			
+			var despesa = $scope.despesas[x];
+			despesa.pres = [];
 
 			for (var m=0; m<8; m++) {
-				var now = moment();
-				var month = now.add(m, "M").month();
-				for (var p=0; p<qtdpres; p++) {
-					var datavencimento = moment($scope.despesas[x].datavencimento);
-					var mes = datavencimento.add(p, "M")._d.getMonth();
-					var dia = datavencimento._d.getDate();
+				var day = moment().add(m, "M").date();
+				var month = moment().add(m, "M").month();
+				var year = moment().add(m, "M").year();
+				var teste = '';
+				var data = '';
+
+				for (var p=0; p<despesa.prestacoes; p++) {
+					var dia = moment(despesa.datavencimento).add(p, "M").date();
+					var mes = moment(despesa.datavencimento).add(p, "M").month();
+					var ano = moment(despesa.datavencimento).add(p, "M").year();
 					
-					if(mes == month) {
-						console.log($scope.despesas[x].descricao);
-						console.log(now.add(m, "M").month());
+					if (mes === month && ano === year) {
+						data = {"data": mes+"/"+ano, "valor":despesa.valor};
+					}
+				}
+				if ( data === '' ) {
+					despesa.pres.push({"data": "00/0000", "valor":"xxxx", "color":"background:#f0f5f5; color:#ccc;"});
+				}else{
+					despesa.pres.push(data);
+					$scope.totais[m].valor = $scope.totais[m].valor +  parseInt(despesa.valor);
+					
+					if($scope.totais[m-1] != undefined && $scope.totais[m].valor < $scope.totais[m-1].valor) {
+						$scope.totais[m].icon = "fa-arrow-down";
+					}else if($scope.totais[m-1] != undefined && $scope.totais[m].valor > $scope.totais[m-1].valor) {
+						$scope.totais[m].icon = "fa-arrow-up";
+					}else{
+						$scope.totais[m].icon = "fa-arrow-right";
 					}
 				}
 			}
-		}
 
-		for (var x in $scope.despesas) {
-			var qtdpres = $scope.despesas[x].prestacoes;
-			var datavencimento = $scope.despesas[x].datavencimento;
-			var count = 0;
-			var countMes = 0;
-			var now = moment();
-			
-			$scope.despesas[x].pres = [];
-
-			// laco para o total de meses 8
-			for (var z=0; z<8; z++) {
-				
-				// laco para total de prestacoes
-				for (var p=0; p<$scope.despesas[x].prestacoes; p++) {
-
-						if (moment($scope.despesas[x].datavencimento).add(p, "M")._d.getMonth() == now.add(z, "M")._d.getMonth()) {
-
-							if (count <= qtdpres) {
-								$scope.despesas[x].pres.push({"valor":$scope.despesas[x].valor});
-								$scope.totais[z].valor = $scope.totais[z].valor +  parseInt($scope.despesas[x].valor);
-								if($scope.totais[z-1] != undefined && $scope.totais[z].valor < $scope.totais[z-1].valor) {
-									$scope.totais[z].icon = "fa-arrow-down";
-								}else if($scope.totais[z-1] != undefined && $scope.totais[z].valor > $scope.totais[z-1].valor) {
-									$scope.totais[z].icon = "fa-arrow-up";
-								}
-							}else{
-								$scope.despesas[x].pres.push({"valor":"xxxx"});
-							}
-						}else{
-							$scope.despesas[x].pres.push({"valor":"xxxx"});
-						}
-				}
-				count++;
-			}
-			$scope.totalgeral = $scope.totalgeral + parseFloat($scope.despesas[x].valor);
+			$scope.totalgeral = $scope.totalgeral + parseFloat(despesa.valor);
 		}
 	}
 
