@@ -107,7 +107,7 @@
 			{"descricao":"Bolsa", "valor":"70", "prestacoes":"1", "datavencimento":"2016-07-08"},
 			{"descricao":"Oculos", "valor":"180", "prestacoes":"2", "datavencimento":"2016-07-20"},
 			{"descricao":"Notebook", "valor":"2000", "prestacoes":"10", "datavencimento":"2016-07-15"},
-			{"descricao":"Meia", "valor":"2000", "prestacoes":"7", "datavencimento":"2016-09-15"}
+			{"descricao":"Meia", "valor":"500", "prestacoes":"7", "datavencimento":"2016-09-15"}
 		];
 
 		$scope.totais = [{"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}];
@@ -120,7 +120,7 @@
 				var num = {"datavencimento":"9999/12/31"};
 				var pos = 0;
 				for (var x in datas) {
-					if (moment(datas[x].datavencimento)._d.getTime() < moment(num.datavencimento)._d.getTime()) {
+					if (moment(datas[x].datavencimento).date() < moment(num.datavencimento).date()) {
 						num = datas[x];
 						num.diavencimento = num.datavencimento.substr(8,2);
 						pos = x;
@@ -133,7 +133,7 @@
 		}
 		ordenaDatas ($scope.despesas);
 
-		// contruindo tabelas de mes
+		// construindo tabelas de mes
 
 		for (var x in $scope.despesas) {
 			var despesa = $scope.despesas[x];
@@ -143,7 +143,6 @@
 				var day = moment().add(m, "M").date();
 				var month = moment().add(m, "M").month();
 				var year = moment().add(m, "M").year();
-				var teste = '';
 				var data = '';
 
 				for (var p=0; p<despesa.prestacoes; p++) {
@@ -153,10 +152,19 @@
 					
 					if (mes === month && ano === year) {
 						data = {"data": mes+"/"+ano, "valor":despesa.valor};
+						// pegando a prestação atual
+						if (m === 0) {
+							despesa.prestacao = (p+1)+"/"+despesa.prestacoes;
+						}
 					}
 				}
+
+				if (!despesa.prestacao) {
+					despesa.prestacao = "0/"+despesa.prestacoes;
+				}
+
 				if ( data === '' ) {
-					despesa.pres.push({"data": "00/0000", "valor":"xxxx", "color":"background:#f0f5f5; color:#ccc;"});
+					despesa.pres.push({"data": "00/0000", "valor":"xxxx", "color":"background:#f0f5f5; color:#ccc;", "icon":"fa-trophyx"});
 				}else{
 					despesa.pres.push(data);
 					$scope.totais[m].valor = $scope.totais[m].valor +  parseInt(despesa.valor);
