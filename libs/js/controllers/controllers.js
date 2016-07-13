@@ -67,18 +67,18 @@
 		}
 
 		var meses = [
-			{"nome":"Janeiro",	"sigla":"JAN"},
-			{"nome":"Fevereiro",	"sigla":"FEV"},
-			{"nome":"Março", 		"sigla":"MAR"},
-			{"nome":"Abril", 		"sigla":"ABRIL"},
-			{"nome":"Maio",	 	"sigla":"MAIO"},
-			{"nome":"Junho", 		"sigla":"JUN"},
-			{"nome":"Julho", 		"sigla":"JUL"},
-			{"nome":"Agosto", 	"sigla":"AGO"},
-			{"nome":"Setembro", 	"sigla":"SET"},
-			{"nome":"Outubro", 	"sigla":"OUT"},
-			{"nome":"Novembro", 	"sigla":"NOV"},
-			{"nome":"Dezembro", 	"sigla":"DEZ"}
+			{"nome":"Janeiro",	"sigla":"JAN", "ano":"0000"},
+			{"nome":"Fevereiro",	"sigla":"FEV", "ano":"0000"},
+			{"nome":"Março", 		"sigla":"MAR", "ano":"0000"},
+			{"nome":"Abril", 		"sigla":"ABRIL", "ano":"0000"},
+			{"nome":"Maio",	 	"sigla":"MAIO", "ano":"0000"},
+			{"nome":"Junho", 		"sigla":"JUN", "ano":"0000"},
+			{"nome":"Julho", 		"sigla":"JUL", "ano":"0000"},
+			{"nome":"Agosto", 	"sigla":"AGO", "ano":"0000"},
+			{"nome":"Setembro", 	"sigla":"SET", "ano":"0000"},
+			{"nome":"Outubro", 	"sigla":"OUT", "ano":"0000"},
+			{"nome":"Novembro", 	"sigla":"NOV", "ano":"0000"},
+			{"nome":"Dezembro", 	"sigla":"DEZ", "ano":"0000"}
 		];
 
 		$scope.meses = [];
@@ -87,13 +87,17 @@
 			var now = new Date();
 			var count = now.getMonth();
 			var total = count + 8;
+			var ano = moment().year();
+
 			while (count < 12) {
+				meses[count].ano = ano;
 				$scope.meses.push(meses[count]);
 				count++;
 			}
 			var resto = total - count;
 			count = 0;
 			while (count < resto) {
+				meses[count].ano = ano+1;
 				$scope.meses.push(meses[count]);
 				count++;
 			}
