@@ -15,10 +15,12 @@ Class DespesaDAO {
 	private $sql;
 	private $obj;
 	private $lista = array();
+	private $superdao;
 
 	//construtor
 	public function __construct($con) {
 		$this->con = $con;
+		$this->superdao = new SuperDAO('despesa');
 	}
 
 	//cadastrar
@@ -33,10 +35,15 @@ Class DespesaDAO {
 			mysqli_real_escape_string($this->con, $obj->getDataaquisicao()),
 			mysqli_real_escape_string($this->con, $obj->getDatavencimento()),
 			mysqli_real_escape_string($this->con, $obj->getAtivo()));
-		if(!mysqli_query($this->con, $this->sql)) {
-			die('[ERRO]: Class('.get_class($obj).') | Metodo(Cadastrar) | Erro('.mysqli_error($this->con).')');
+		$this->superdao->resetResponse();
+
+		if( !mysqli_query( $this->con, $this->sql ) ) {
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), get_class( $obj ), 'Cadastrar' ) );
+		}else{
+			$this->superdao->setSuccess( true );
+			$this->superdao->setData( mysqli_insert_id($this->con) );
 		}
-		return mysqli_insert_id($this->con);
+		return $this->superdao->getResponse();
 	}
 
 	//buscarPorId
