@@ -3,7 +3,7 @@
 
     "use strict"
 
-    angular.module('cfp').service("genericAPI", function ($http) {
+    angular.module('cfp').service("genericAPI", function ( $http, $rootScope ) {
 
         function _generic (data, scope) {
             return $http({
@@ -11,7 +11,8 @@
                 url: "src/rest/" + data.class + ".php",
                 data: {
                     metodo: data.metodo,
-                    data: data.data
+                    data: data.data,
+                    usuario: $rootScope.usuario
                 }
             });
         };

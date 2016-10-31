@@ -81,12 +81,17 @@
 			{"nome":"Dezembro", 	"sigla":"DEZ", "ano":"0000"}
 		];
 
-		$scope.meses = [];
+		$scope.periodos = [
+			'3','4','5','6','7','8','9','10','11','12'
+		];
 
+		$scope.tlmeses = '3';
 		function carregaMeses () {
+			$scope.meses = [];
+
 			var now = new Date();
 			var count = now.getMonth();
-			var total = count + 8;
+			var total = count + parseInt($scope.tlmeses);
 			var ano = moment().year();
 
 			while (count < 12) {
@@ -104,18 +109,45 @@
 		}
 		carregaMeses ();
 
+		function totaisValor () {
+			$scope.totais = [];
+			$scope.totalgeral = 0;
+			for ( var i=0; i<$scope.tlmeses; i++ ) {
+				$scope.totais.push({"valor":0});
+			}
+		};
+		totaisValor();
+
 		$scope.despesas = [
-			{"descricao":"Tênis", "valor":"90", "prestacoes":"5", "datavencimento":"2016-07-05"},
-			{"descricao":"Mouse Razor", "valor":"150", "prestacoes":"3", "datavencimento":"2016-07-05"},
-			{"descricao":"Carro", "valor":"450", "prestacoes":"25", "datavencimento":"2016-07-01"},
-			{"descricao":"Bolsa", "valor":"70", "prestacoes":"1", "datavencimento":"2016-07-08"},
-			{"descricao":"Oculos", "valor":"180", "prestacoes":"2", "datavencimento":"2016-07-20"},
-			{"descricao":"Notebook", "valor":"2000", "prestacoes":"10", "datavencimento":"2016-07-15"},
-			{"descricao":"Meia", "valor":"500", "prestacoes":"7", "datavencimento":"2016-09-15"}
+			// {"descricao":"Tênis", "valor":"90.00", "prestacoes":"5", "datavencimento":"2016-07-05"},
+			// {"descricao":"Mouse Razor", "valor":"150", "prestacoes":"3", "datavencimento":"2016-07-05"},
+			// {"descricao":"Carro", "valor":"450", "prestacoes":"25", "datavencimento":"2016-07-01"},
+			// {"descricao":"Bolsa", "valor":"70", "prestacoes":"1", "datavencimento":"2016-07-08"},
+			// {"descricao":"Oculos", "valor":"180", "prestacoes":"2", "datavencimento":"2016-07-20"},
+			// {"descricao":"Notebook", "valor":"2000", "prestacoes":"10", "datavencimento":"2016-07-15"},
+			// {"descricao":"Meia", "valor":"500", "prestacoes":"7", "datavencimento":"2016-09-15"}
 		];
 
-		$scope.totais = [{"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}, {"valor":0}];
-		$scope.totalgeral = 0;
+		$scope.listarDespesaPorUsuario = function () {
+			var data = {
+				"metodo":"listarPorUsuario",
+				"class":"despesa"
+			};
+			genericAPI.generic(data)
+			.then(function successCallback(response) {
+				if( response.data.success === true ){
+		        	$scope.despesas = response.data.data;
+		        	ordenaDatas( $scope.despesas );
+		        	montaValorMes();
+		        }else{
+		        	alert( response.data.msg );
+		        }
+	        }, function errorCallback(response) {
+	        	//error
+			});	
+
+		}
+		$scope.listarDespesaPorUsuario();
 
 		function ordenaDatas (despesas) {
 			var datas = despesas;
@@ -135,56 +167,77 @@
 			}
 			$scope.despesas = array;
 		}
-		ordenaDatas ($scope.despesas);
-
+		
 		// construindo tabelas de mes
 
-		for (var x in $scope.despesas) {
-			var despesa = $scope.despesas[x];
-			despesa.pres = [];
+		function montaValorMes () {
+			// laco de despesas
+			for (var x in $scope.despesas) {
+				// separo a despesa
+				var despesa = $scope.despesas[x];
+				// crio um atributo pres(array) na despesa
+				despesa.pres = [];
 
-			for (var m=0; m<8; m++) {
-				var day = moment().add(m, "M").date();
-				var month = moment().add(m, "M").month();
-				var year = moment().add(m, "M").year();
-				var data = '';
+				// laco de meses até 8
+				// for (var m=0; m<8; m++) {
+				for (var m=0; m<$scope.tlmeses; m++) {
+					var day = moment().add(m, "M").date(); // dia atual + 1
+					var month = moment().add(m, "M").month(); // mes atual + 1
+					var year = moment().add(m, "M").year(); // ano atual + 1
+					var data = ''; // variavel data
 
-				for (var p=0; p<despesa.prestacoes; p++) {
-					var dia = moment(despesa.datavencimento).add(p, "M").date();
-					var mes = moment(despesa.datavencimento).add(p, "M").month();
-					var ano = moment(despesa.datavencimento).add(p, "M").year();
-					
-					if (mes === month && ano === year) {
-						data = {"data": mes+"/"+ano, "valor":despesa.valor};
-						// pegando a prestação atual
-						if (m === 0) {
-							despesa.prestacao = (p+1)+"/"+despesa.prestacoes;
+					// laco de prestacoes da despesa
+					for (var p=0; p<despesa.prestacoes; p++) {
+						var dia = moment(despesa.datavencimento).add(p, "M").date(); // dia da data despesa + index
+						var mes = moment(despesa.datavencimento).add(p, "M").month(); // mes data despesa + index
+						var ano = moment(despesa.datavencimento).add(p, "M").year(); // ano data despesa + index
+						
+						// caso o mes e ano da despesa seja = ao mes e ano atual 
+						if (mes === month && ano === year) {
+							data = {"data": mes+"/"+ano, "valor":despesa.valor};
+							// pegando a prestação atual
+							if (m === 0) { // m = o ( mes atual )
+								despesa.prestacao = (p+1)+"/"+despesa.prestacoes;
+							}
+						}
+					}
+
+					if (!despesa.prestacao) {
+						// se ano = atual mas mes menor ou ano menor
+						if ( (ano === year && mes < month) || (ano < year) ) {
+							despesa.prestacao = despesa.prestacoes+"/"+despesa.prestacoes;
+						}else{
+							despesa.prestacao = "0/"+despesa.prestacoes;
+						}
+					}
+
+					if ( data === '' ) {
+						despesa.pres.push({"data": "00/0000", "valor":"xxxx", "color":"background:#f0f5f5; color:#ccc;", "icon":"fa-trophyx"});
+					}else{
+						despesa.pres.push(data);
+						$scope.totais[m].valor = $scope.totais[m].valor +  parseInt(despesa.valor);
+						
+						if($scope.totais[m-1] != undefined && $scope.totais[m].valor < $scope.totais[m-1].valor) {
+							$scope.totais[m].icon = "fa-arrow-down";
+						}else if($scope.totais[m-1] != undefined && $scope.totais[m].valor > $scope.totais[m-1].valor) {
+							$scope.totais[m].icon = "fa-arrow-up";
+						}else{
+							$scope.totais[m].icon = "fa-arrow-right";
 						}
 					}
 				}
 
-				if (!despesa.prestacao) {
-					despesa.prestacao = "0/"+despesa.prestacoes;
-				}
-
-				if ( data === '' ) {
-					despesa.pres.push({"data": "00/0000", "valor":"xxxx", "color":"background:#f0f5f5; color:#ccc;", "icon":"fa-trophyx"});
-				}else{
-					despesa.pres.push(data);
-					$scope.totais[m].valor = $scope.totais[m].valor +  parseInt(despesa.valor);
-					
-					if($scope.totais[m-1] != undefined && $scope.totais[m].valor < $scope.totais[m-1].valor) {
-						$scope.totais[m].icon = "fa-arrow-down";
-					}else if($scope.totais[m-1] != undefined && $scope.totais[m].valor > $scope.totais[m-1].valor) {
-						$scope.totais[m].icon = "fa-arrow-up";
-					}else{
-						$scope.totais[m].icon = "fa-arrow-right";
-					}
-				}
+				$scope.totalgeral = $scope.totalgeral + parseFloat(despesa.valor);
 			}
-
-			$scope.totalgeral = $scope.totalgeral + parseFloat(despesa.valor);
 		}
+
+		$scope.changeTlMeses = function () {
+			$scope.meses = [];
+			carregaMeses();
+			totaisValor();
+			ordenaDatas( $scope.despesas );
+			montaValorMes();
+		};
 	}
 
 	/*******************************************
@@ -216,22 +269,24 @@
 			$scope.nova = true;
 		}
 
-		$scope.listar = function () {
+		$scope.listarPorUsuario = function () {
 			var data = {
-				"metodo":"listar",
+				"metodo":"listarPorUsuario",
 				"class":"despesa"
 			};
 			genericAPI.generic(data)
-				.then(function successCallback(response) {
-					if(response.data.length>0){
-			        	$scope.despesas = response.data;
-			        }
-		        }, function errorCallback(response) {
-		        	//error
-				});	
+			.then(function successCallback(response) {
+				if( response.data.success === true ){
+		        	$scope.despesas = response.data.data;
+		        }else{
+		        	alert( response.data.msg );
+		        }
+	        }, function errorCallback(response) {
+	        	//error
+			});	
 
 		}
-		$scope.listar();
+		$scope.listarPorUsuario();
 
 		$scope.editar = function (obj) {
 			obj.dataaquisicao = moment(obj.dataaquisicao).format('DD/MM/YYYY');
@@ -276,9 +331,12 @@
 			};
 			genericAPI.generic(data)
 				.then(function successCallback(response) {
-					//success
-					inciaScope();
-					$scope.listar();
+					if( response.data.success === true ){
+			        	inciaScope();
+						$scope.listar();
+			        }else{
+			        	alert( response.data.msg );
+			        }
 		        }, function errorCallback(response) {
 		        	//error
 				});	
@@ -317,22 +375,24 @@
 			$scope.novo = true;
 		}
 
-		$scope.listar = function () {
+		$scope.listarPorUsuario = function () {
 			var data = {
 				"metodo":"listar",
 				"class":"recebimento"
 			};
 			genericAPI.generic(data)
-				.then(function successCallback(response) {
-					if(response.data.length>0){
-			        	$scope.recebimentos = response.data;
-			        }
-		        }, function errorCallback(response) {
-		        	//error
-				});	
+			.then(function successCallback(response) {
+				if( response.data.success === true ){
+		        	$scope.recebimentos = response.data.data;
+		        }else{
+		        	alert( response.data.msg );
+		        }
+	        }, function errorCallback(response) {
+	        	//error
+			});	
 
 		}
-		$scope.listar();
+		$scope.listarPorUsuario();
 
 		$scope.editar = function (obj) {
 			obj.dataarrecadacao = moment(obj.dataarrecadacao).format('DD/MM/YYYY');
@@ -356,9 +416,12 @@
 			};
 			genericAPI.generic(data)
 				.then(function successCallback(response) {
-					//success
-					startScope();
-					$scope.listar();
+					if ( response.data.success === true ) {
+						startScope();
+						$scope.listar();
+					}else{
+						alert( response.data.msg );
+					}
 		        }, function errorCallback(response) {
 		        	//error
 				});	
@@ -373,9 +436,12 @@
 			};
 			genericAPI.generic(data)
 				.then(function successCallback(response) {
-					//success
-					startScope();
-					$scope.listar();
+					if ( response.data.success === true ) {
+						startScope();
+						$scope.listar();
+					}else{
+						alert( response.data.msg );
+					}
 		        }, function errorCallback(response) {
 		        	//error
 				});	

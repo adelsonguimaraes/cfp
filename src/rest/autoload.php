@@ -16,6 +16,9 @@ $_POST =  json_decode($_POST, true);
 // conexao
 require_once("../util/Conexao.php");
 
+// mysql resolve
+require_once("../util/ResolveMysqlError.php");
+
 // carrega class
 function carregaClasses($class){
 	//Verifica se existe Control no nome da classe

@@ -17,14 +17,17 @@ switch ($_POST['metodo']) {
 	case 'cadastrar':
 		cadastrar();
 		break;
+	case 'atualizar':
+		atualizar();
+		break;
 	case 'buscarPorId':
 		buscarPorId();
 		break;
 	case 'listar':
 		listar();
 		break;
-	case 'atualizar':
-		atualizar();
+	case 'listarPorUsuario':
+		listarPorUsuario();
 		break;
 	case 'deletar':
 		deletar();
@@ -43,23 +46,8 @@ function cadastrar () {
 		$data['ativo']
 	);
 	$control = new RecebimentoControl($obj);
-	$id = $control->cadastrar();
-	echo $id;
-}
-function buscarPorId () {
-	$data = $_POST['data'];
-	$control = new RecebimentoControl(new Recebimento($data['id']));
-	$obj = $control->buscarPorId();
-	if(!empty($obj)) {
-		echo json_encode($obj);
-	}
-}
-function listar () {
-	$control = new RecebimentoControl(new Recebimento);
-	$lista = $control->listar();
-	if(!empty($lista)) {
-		echo json_encode($lista);
-	}
+	$response = $control->cadastrar();
+	echo json_encode( $response );
 }
 function atualizar () {
 	$data = $_POST['data'];
@@ -73,15 +61,33 @@ function atualizar () {
 		$data['ativo']
 	);
 	$control = new RecebimentoControl($obj);
-	$id = $control->atualizar();
-	echo $id;
+	$response = $control->atualizar();
+	echo json_encode( $response );
+}
+function buscarPorId () {
+	$data = $_POST['data'];
+	$control = new RecebimentoControl(new Recebimento($data['id']));
+	$response = $control->buscarPorId();
+	echo json_encode( $response );
+}
+function listar () {
+	$control = new RecebimentoControl(new Recebimento);
+	$response = $control->listar();
+	echo json_encode( $response );
+}
+function listarPorUsuario () {
+	$usuario = json_decode( $_POST['usuario'] );
+	$control = new RecebimentoControl();
+	$response = $control->listarPorUsuario( $usuario['idusuario'] );
+	echo json_encode( $response );
 }
 function deletar () {
 	$data = $_POST['data'];
 	$banco = new Recebimento();
 	$banco->setId($data['id']);
 	$control = new RecebimentoControl($banco);
-	echo $control->deletar();
+	$response = $control->deletar();
+	echo json_encode( $response );
 }
 
 
