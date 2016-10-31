@@ -25,6 +25,7 @@ Class DespesaDAO {
 
 	//cadastrar
 	function cadastrar (Despesa $obj) {
+	function cadastrar ( Despesa $obj ) {
 		$this->sql = sprintf("INSERT INTO despesa(idusuario, descricao, valor, quantidade, prestacoes, dataaquisicao, datavencimento, ativo)
 		VALUES(%d, '%s', %f, %d, %d, '%s', '%s', '%s')",
 			mysqli_real_escape_string($this->con, $obj->getObjusuario()->getId()),
@@ -35,16 +36,21 @@ Class DespesaDAO {
 			mysqli_real_escape_string($this->con, $obj->getDataaquisicao()),
 			mysqli_real_escape_string($this->con, $obj->getDatavencimento()),
 			mysqli_real_escape_string($this->con, $obj->getAtivo()));
-		$this->superdao->resetResponse();
-
-		if( !mysqli_query( $this->con, $this->sql ) ) {
-			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), get_class( $obj ), 'Cadastrar' ) );
-		}else{
-			$this->superdao->setSuccess( true );
-			$this->superdao->setData( mysqli_insert_id($this->con) );
+		if(!mysqli_query($this->con, $this->sql)) {
+			die('[ERRO]: Class('.get_class($obj).') | Metodo(Cadastrar) | Erro('.mysqli_error($this->con).')');
 		}
-		return $this->superdao->getResponse();
+		return mysqli_insert_id($this->con);
 	}
+
+
+
+
+
+
+
+
+
+
 
 	//buscarPorId
 	function buscarPorId (Despesa $obj) {
@@ -62,6 +68,7 @@ Class DespesaDAO {
 		}
 		return $this->obj;
 	}
+		$this->superdao->resetResponse();
 
 	//listar
 	function listar (Despesa $obj) {
@@ -69,6 +76,11 @@ Class DespesaDAO {
 		$resultSet = mysqli_query($this->con, $this->sql);
 		if(!$resultSet) {
 			die('[ERRO]: Class(Banco) | Metodo(Listar) | Erro('.mysqli_error($this->con).')');
+		if( !mysqli_query( $this->con, $this->sql ) ) {
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), get_class( $obj ), 'Cadastrar' ) );
+		}else{
+			$this->superdao->setSuccess( true );
+			$this->superdao->setData( mysqli_insert_id( $this->con ) );
 		}
 		while($row = mysqli_fetch_object($resultSet)) {
 			//classe usuario
@@ -78,10 +90,12 @@ Class DespesaDAO {
 			array_push($this->lista, $this->obj);
 		}
 		return $this->lista;
+		return $this->superdao->getResponse();
 	}
 
 	//atualizar
 	function atualizar (Despesa $obj) {
+	function atualizar ( Despesa $obj ) {
 		$this->sql = sprintf("UPDATE despesa SET idusuario = %d, descricao = '%s', valor = %f, quantidade = %d, prestacoes = %d, dataaquisicao = '%s', datavencimento = '%s', ativo = '%s', dataedicao = '%s' WHERE id = %d ",
 			mysqli_real_escape_string($this->con, $obj->getObjusuario()->getId()),
 			mysqli_real_escape_string($this->con, $obj->getDescricao()),
@@ -95,19 +109,117 @@ Class DespesaDAO {
 			mysqli_real_escape_string($this->con, $obj->getId()));
 		if(!mysqli_query($this->con, $this->sql)) {
 			die('[ERRO]: Class('.get_class($obj).') | Metodo(Atualizar) | Erro('.mysqli_error($this->con).')');
+		
+		$this->superdao->resetResponse();
+
+		if( !mysqli_query( $this->con, $this->sql ) ) {
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), get_class( $obj ), 'Atualizar' ) );
+		}else{
+			$this->superdao->setSuccess( true );
+			$this->superdao->setData( true );
 		}
 		return mysqli_insert_id($this->con);
+		return $this->superdao->getResponse();
+	}
+
+	//buscarPorId
+	function buscarPorId (Despesa $obj) {
+		$this->sql = sprintf("SELECT * FROM despesa WHERE id = %d",
+			mysqli_real_escape_string($this->con, $obj->getId()));
+		$result = mysqli_query($this->con, $this->sql);
+		
+		$this->superdao->resetResponse();
+
+		if( !mysqli_query( $this->con, $this->sql ) ) {
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), get_class( $obj ), 'Atualizar' ) );
+		}else{
+			while($row = mysqli_fetch_object($result)) {
+				//classe usuario
+				// $controlUsuario = new UsuarioControl(new Usuario($row->idusuario));
+				// $objUsuario = $controlUsuario->buscarPorId();
+				// $this->obj = new Despesa($row->id, $objUsuario, $row->descricao, $row->valor, $row->quantidade, $row->prestacoes, $row->dataaquisicao, $row->datavencimento, $row->ativo, $row->datacadastro, $row->dataedicao);
+				array_push( $this->lista, $row );
+			}
+			$this->superdao->setSuccess( true );
+			$this->superdao->setData( $this->lista );
+		}
+		return $this->superdao->getResponse();
+	}
+
+	//listar
+	function listar () {
+		$this->sql = "SELECT * FROM despesa";
+		$result = mysqli_query($this->con, $this->sql);
+		$this->superdao->resetResponse();
+
+		if( !mysqli_query( $this->con, $this->sql ) ) {
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), get_class( $obj ), 'Atualizar' ) );
+		}else{
+			while($row = mysqli_fetch_object($result)) {
+				//classe usuario
+				// $controlUsuario = new UsuarioControl(new Usuario($row->idusuario));
+				// $objUsuario = $controlUsuario->buscarPorId();
+				// $this->obj = new Despesa($row->id, $objUsuario, $row->descricao, $row->valor, $row->quantidade, $row->prestacoes, $row->dataaquisicao, $row->datavencimento, $row->ativo, $row->datacadastro, $row->dataedicao);
+				array_push( $this->lista, $row );
+			}
+			$this->superdao->setSuccess( true );
+			$this->superdao->setData( $this->lista );
+		}
+		return $this->superdao->getResponse();
+	}
+
+	//listar
+	function listarPorUsuario ( $idusuario ) {
+		$this->sql = "SELECT * FROM despesa WHERE idusuario = $idusuario";
+		$result = mysqli_query($this->con, $this->sql);
+
+		$this->superdao->resetResponse();
+
+		if( !mysqli_query( $this->con, $this->sql ) ) {
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), get_class( $obj ), 'Atualizar' ) );
+		}else{
+			while($row = mysqli_fetch_object($result)) {
+				//classe usuario
+				// $controlUsuario = new UsuarioControl(new Usuario($row->idusuario));
+				// $objUsuario = $controlUsuario->buscarPorId();
+				// $this->obj = new Despesa($row->id, $objUsuario, $row->descricao, $row->valor, $row->quantidade, $row->prestacoes, $row->dataaquisicao, $row->datavencimento, $row->ativo, $row->datacadastro, $row->dataedicao);
+				array_push( $this->lista, $row );
+			}
+			$this->superdao->setSuccess( true );
+			$this->superdao->setData( $this->lista );
+		}
+		return $this->superdao->getResponse();
 	}
 
 	//deletar
 	function deletar (Despesa $obj) {
+			
+		$this->superdao->resetResponse();
+
+		// buscando por dependentes
+        $dependentes = $this->superdao->verificaDependentes($obj->getId());
+		if ( $dependentes > 0 ) {
+		    $this->superdao->setMsg( resolve( '0001', $dependentes, get_class( $obj ), 'Deletar' ));
+			return $this->superdao->getResponse();
+		}
+
 		$this->sql = sprintf("DELETE FROM despesa WHERE id = %d",
 			mysqli_real_escape_string($this->con, $obj->getId()));
 		$resultSet = mysqli_query($this->con, $this->sql);
 		if(!$resultSet) {
 			die('[ERRO]: Class('.get_class($obj).') | Metodo(Deletar) | Erro('.mysqli_error($this->con).')');
+		$result = mysqli_query($this->con, $this->sql);
+		
+		if ( !$result ) {
+            $this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), get_class( $obj ), 'Deletar' ));
+			return $this->superdao->getResponse();
 		}
 		return true;
+
+		$this->superdao->setSuccess( true );
+		$this->superdao->setData( true );
+
+		return $this->superdao->getResponse();
 	}
 
 	//listar paginado
@@ -137,6 +249,7 @@ Class DespesaDAO {
 		}
 		return $total;
 	}
+
 }
 
 // Classe gerada com BlackCoffeePHP 1.0 - by Adelson Guimarães

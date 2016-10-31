@@ -23,6 +23,9 @@ switch ($_POST['metodo']) {
 	case 'listar':
 		listar();
 		break;
+	case 'listarPorUsuario':
+		listarPorUsuario();
+		break;
 	case 'atualizar':
 		atualizar();
 		break;
@@ -44,24 +47,9 @@ function cadastrar () {
 		$data['datavencimento']
 		// $data['ativo']
 	);
-	$control = new DespesaControl($obj);
-	$id = $control->cadastrar();
-	echo $id;
-}
-function buscarPorId () {
-	$data = $_POST['data'];
-	$control = new DespesaControl(new Despesa($data['id']));
-	$obj = $control->buscarPorId();
-	if(!empty($obj)) {
-		echo json_encode($obj);
-	}
-}
-function listar () {
-	$control = new DespesaControl(new Despesa);
-	$lista = $control->listar();
-	if(!empty($lista)) {
-		echo json_encode($lista);
-	}
+	$control = new DespesaControl( $obj );
+	$response = $control->cadastrar();
+	echo json_encode( $response );
 }
 function atualizar () {
 	$data = $_POST['data'];
@@ -80,12 +68,30 @@ function atualizar () {
 	$id = $control->atualizar();
 	echo $id;
 }
+function buscarPorId () {
+	$data = $_POST['data'];
+	$control = new DespesaControl(new Despesa($data['id']));
+	$response = $control->buscarPorId();
+	echo json_encode( $response );
+}
+function listar () {
+	$control = new DespesaControl();
+	$response = $control->listar();
+	echo json_encode( $response );
+}
+function listarPorUsuario () {
+	$usuario = $_POST['usuario'];
+	$control = new DespesaControl();
+	$response = $control->listarPorUsuario( $usuario['idusuario'] );
+	echo json_encode( $response );
+}
 function deletar () {
 	$data = $_POST['data'];
 	$banco = new Despesa();
 	$banco->setId($data['id']);
 	$control = new DespesaControl($banco);
-	echo $control->deletar();
+	$response = $control->deletar();
+	echo json_encode( $response );
 }
 
 

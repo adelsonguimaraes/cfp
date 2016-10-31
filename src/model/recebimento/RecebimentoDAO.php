@@ -15,10 +15,12 @@ Class RecebimentoDAO {
 	private $sql;
 	private $obj;
 	private $lista = array();
+	private $superdao;
 
 	//construtor
 	public function __construct($con) {
 		$this->con = $con;
+		$this->superdao = new SuperDAO('recebimento');
 	}
 
 	//cadastrar
@@ -31,44 +33,15 @@ Class RecebimentoDAO {
 			mysqli_real_escape_string($this->con, $obj->getDataarrecadacao()),
 			mysqli_real_escape_string($this->con, $obj->getTipo()),
 			mysqli_real_escape_string($this->con, $obj->getAtivo()));
-		if(!mysqli_query($this->con, $this->sql)) {
-			die('[ERRO]: Class('.get_class($obj).') | Metodo(Cadastrar) | Erro('.mysqli_error($this->con).')');
-		}
-		return mysqli_insert_id($this->con);
-	}
+		$this->superdao->resetResponse();
 
-	//buscarPorId
-	function buscarPorId (Recebimento $obj) {
-		$this->sql = sprintf("SELECT * FROM recebimento WHERE id = %d",
-			mysqli_real_escape_string($this->con, $obj->getId()));
-		$resultSet = mysqli_query($this->con, $this->sql);
-		if(!$resultSet) {
-			die('[ERRO]: Class('.get_class($obj).') | Metodo(BuscarPorId) | Erro('.mysqli_error($this->con).')');
+		if( !mysqli_query( $this->con, $this->sql ) ) {
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), get_class( $obj ), 'Cadastrar' ) );
+		}else{
+			$this->superdao->setSuccess( true );
+			$this->superdao->setData( mysqli_insert_id( $this->con ) );
 		}
-		while($row = mysqli_fetch_object($resultSet)) {
-			//classe usuario
-			$controlUsuario = new UsuarioControl(new Usuario($row->idusuario));
-			$objUsuario = $controlUsuario->buscarPorId();
-			$this->obj = new Recebimento($row->id, $objUsuario, $row->descricao, $row->valor, $row->dataarrecadacao, $row->tipo, $row->ativo, $row->datacadastro, $row->dataedicao);
-		}
-		return $this->obj;
-	}
-
-	//listar
-	function listar (Recebimento $obj) {
-		$this->sql = "SELECT * FROM recebimento";
-		$resultSet = mysqli_query($this->con, $this->sql);
-		if(!$resultSet) {
-			die('[ERRO]: Class(Banco) | Metodo(Listar) | Erro('.mysqli_error($this->con).')');
-		}
-		while($row = mysqli_fetch_object($resultSet)) {
-			//classe usuario
-			$controlUsuario = new UsuarioControl(new Usuario($row->idusuario));
-			$objUsuario = $controlUsuario->buscarPorId();
-			$this->obj = new Recebimento($row->id, $objUsuario, $row->descricao, $row->valor, $row->dataarrecadacao, $row->tipo, $row->ativo, $row->datacadastro, $row->dataedicao);
-			array_push($this->lista, $this->obj);
-		}
-		return $this->lista;
+		return $this->superdao->getResponse();
 	}
 
 	//atualizar
@@ -82,37 +55,112 @@ Class RecebimentoDAO {
 			mysqli_real_escape_string($this->con, $obj->getAtivo()),
 			mysqli_real_escape_string($this->con, date('Y-m-d')),
 			mysqli_real_escape_string($this->con, $obj->getId()));
-		if(!mysqli_query($this->con, $this->sql)) {
-			die('[ERRO]: Class('.get_class($obj).') | Metodo(Atualizar) | Erro('.mysqli_error($this->con).')');
+		
+		$this->superdao->resetResponse();
+
+		if( !mysqli_query( $this->con, $this->sql ) ) {
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), get_class( $obj ), 'Atualizar' ) );
+		}else{
+			$this->superdao->setSuccess( true );
+			$this->superdao->setData( true );
 		}
-		return mysqli_insert_id($this->con);
+		return $this->superdao->getResponse();
 	}
 
-	//deletar
-	function deletar (Recebimento $obj) {
-		$this->sql = sprintf("DELETE FROM recebimento WHERE id = %d",
+	//buscarPorId
+	function buscarPorId (Recebimento $obj) {
+		$this->sql = sprintf("SELECT * FROM recebimento WHERE id = %d",
 			mysqli_real_escape_string($this->con, $obj->getId()));
-		$resultSet = mysqli_query($this->con, $this->sql);
-		if(!$resultSet) {
-			die('[ERRO]: Class('.get_class($obj).') | Metodo(Deletar) | Erro('.mysqli_error($this->con).')');
+		$result = mysqli_query($this->con, $this->sql);
+		if(!$result) {
+			die('[ERRO]: Class('.get_class($obj).') | Metodo(BuscarPorId) | Erro('.mysqli_error($this->con).')');
 		}
-		return true;
+		while($row = mysqli_fetch_object($result)) {
+			//classe usuario
+			$controlUsuario = new UsuarioControl(new Usuario($row->idusuario));
+			$objUsuario = $controlUsuario->buscarPorId();
+			$this->obj = new Recebimento($row->id, $objUsuario, $row->descricao, $row->valor, $row->dataarrecadacao, $row->tipo, $row->ativo, $row->datacadastro, $row->dataedicao);
+		}
+		return $this->obj;
+	}
+
+	//listar
+	function listar () {
+		$this->sql = "SELECT * FROM recebimento";
+		$result = mysqli_query($this->con, $this->sql);
+		
+		$this->superdao->resetResponse();
+
+		if( !mysqli_query( $this->con, $this->sql ) ) {
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), get_class( $obj ), 'Atualizar' ) );
+		}else{
+			while($row = mysqli_fetch_object($result)) {
+				array_push( $this->lista, $row );
+			}
+			$this->superdao->setSuccess( true );
+			$this->superdao->setData( $this->lista );
+		}
+		return $this->superdao->getResponse();
+	}
+
+	//listar
+	function listarPorUsuario ( $idusuario ) {
+		$this->sql = "SELECT * FROM recebimento";
+		$result = mysqli_query($this->con, $this->sql);
+		
+		$this->superdao->resetResponse();
+
+		if( !mysqli_query( $this->con, $this->sql ) ) {
+			$this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), get_class( $obj ), 'Atualizar' ) );
+		}else{
+			while($row = mysqli_fetch_object($result)) {
+				array_push( $this->lista, $row );
+			}
+			$this->superdao->setSuccess( true );
+			$this->superdao->setData( $this->lista );
+		}
+		return $this->superdao->getResponse();
 	}
 
 	//listar paginado
-	function listarPaginado($start, $limit) {
-		$this->sql = "SELECT * FROM recebimento limit " . $start . ", " . $limit;
-		$result = mysqli_query ( $this->con, $this->sql );
-		if (! $result) {
-			die ( '[ERRO]: ' . mysqli_error ( $this->con ) );
+	// function listarPaginado($start, $limit) {
+	// 	$this->sql = "SELECT * FROM recebimento limit " . $start . ", " . $limit;
+	// 	$result = mysqli_query ( $this->con, $this->sql );
+	// 	if (! $result) {
+	// 		die ( '[ERRO]: ' . mysqli_error ( $this->con ) );
+	// 	}
+	// 	$this->lista = array();
+	// 	while ( $row = mysqli_fetch_assoc ( $result ) ) {
+	// 		$this->lista=$row;
+	// 	}
+	// 	//teste
+	// 	return $this->lista;
+	// }
+
+	//deletar
+	function deletar (Recebimento $obj) {
+		$this->superdao->resetResponse();
+
+		// buscando por dependentes
+        $dependentes = $this->superdao->verificaDependentes($obj->getId());
+		if ( $dependentes > 0 ) {
+		    $this->superdao->setMsg( resolve( '0001', $dependentes, get_class( $obj ), 'Deletar' ));
+			return $this->superdao->getResponse();
 		}
-		$this->lista = array();
-		while ( $row = mysqli_fetch_assoc ( $result ) ) {
-			$this->lista=$row;
+		
+		$this->sql = sprintf("DELETE FROM recebimento WHERE id = %d",
+			mysqli_real_escape_string($this->con, $obj->getId()));
+		if ( !$result ) {
+            $this->superdao->setMsg( resolve( mysqli_errno( $this->con ), mysqli_error( $this->con ), get_class( $obj ), 'Deletar' ));
+			return $this->superdao->getResponse();
 		}
-		//teste
-		return $this->lista;
+
+		$this->superdao->setSuccess( true );
+		$this->superdao->setData( true );
+
+		return $this->superdao->getResponse();
 	}
+
 	//quantidade total
 	function qtdTotal() {
 		$this->sql = "SELECT count(*) as quantidade FROM recebimento";
