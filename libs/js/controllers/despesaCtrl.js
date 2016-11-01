@@ -92,7 +92,6 @@ var despesaCtrl = function ($scope, $rootScope, $location, genericAPI) {
 				vencimento: data.format('MM/DD/YYYY'),
 				status: 'EM ABERTO'
 			});
-			// console.log( data.format('MM/DD/YYYY')  );
 		};
 		console.log( array );
 
