@@ -70,6 +70,26 @@
 	                    ]);
 	                }
 	            }
+	        })
+
+	        .state('fatura', {
+	            url: "/fatura",
+	            templateUrl: "views/fatura.html",
+	            controller: "faturaCtrl",
+	            data: { pageTitle: 'Login', specialClass: 'gray-bg'},
+	            resolve: {
+	                loadPlugin: function ($ocLazyLoad) {
+	                    return $ocLazyLoad.load([
+	                       {
+	                            files: ['libs/js/plugins/moment/moment.min.js']
+	                        },
+	                        {
+	                            name: 'datePicker',
+	                            files: ['libs/css/plugins/datapicker/angular-datapicker.css','libs/js/plugins/datapicker/angular-datepicker.js']
+	                        },
+	                    ]);
+	                }
+	            }
 	        });
 	}
 
