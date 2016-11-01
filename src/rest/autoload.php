@@ -16,7 +16,6 @@ $_POST =  json_decode($_POST, true);
 // conexao
 require_once("../util/Conexao.php");
 
-
 // mysql resolve
 require_once("../util/ResolveMysqlError.php");
 
