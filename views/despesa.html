@@ -7,6 +7,8 @@
 					<h3>Lista de Despesas</h3>
 				</div>
 				<div class="panel-body">
+					<button class="btn btn-primary" ng-click="novaDespesa()"><i class="fa fa-plus"></i> Nova despesa</button>
+					<hr>
 					<div class="bg-danger btn-lg" ng-if="!despesas">
 						<span class="text-danger">Nenhuma despesa registrada</span>
 					</div>
@@ -47,8 +49,6 @@
 							</td></tr>
 						</tfoot>
 					</table>
-					<hr>
-					<button class="btn btn-primary" ng-click="novaDespesa()"><i class="fa fa-plus"></i> Nova despesa</button>
 				</div>
 			</div>
 		</div>
@@ -58,6 +58,31 @@
 					Cadastro de Despesas
 				</div>
 				<div class="panel-body">
+					<h3>Instruções</h3>
+					<hr>
+					<ul>
+						<li>
+							<b>Descrição:</b> 
+							Descrava sua despesa de maneira que fique fácil para você a identificação durante as consultas.
+						</li>
+						<li>
+							<b>Valor:</b>
+							Coloque o valor total de sua despesa atualizado.
+						</li>
+						<li>
+							<b>Prestações:</b> 
+							Indique as prestações atuais atualizadas de sua despesa, o sistema irá calcular automaticamente o valor de cada parcela a partir do valor total informado.
+						</li>
+						<li>
+							<b>Data Aquisição:</b>
+							Informe a data de quando houve a aquisição do produto, isso irá servir como um lembrete.
+						</li>
+						<li>
+							<b>Data Vencimento:</b>
+							Informe a data do próximo vencimento de sua despesa, com essa informação o sistema irá criar o cronograma de sua despesa.
+						</li>
+					</ul>
+					<hr>
 					<form name="form" class="form" role="form">
 						<div class="row">
 							<div class="col-md-12">
@@ -74,12 +99,12 @@
 									<input type="text" class="form-control" name="valor" ng-model="despesa.valor" ng-required="true">
 								</div>
 							</div>
-							<div class="col-md-2">
+							<!-- <div class="col-md-2">
 								<div class="form-group">
 								 	<label class="label-control">Quantidade</label>
 									<h-number value="despesa.quantidade" unit-position="left" min="1" max="9999" step="1" ng-model="despesa.quantidade"></h-number>
 								</div>
-							</div>
+							</div> -->
 							<div class="col-md-2">
 							 	<div class="form-group">
 							 		<label class="label-control">Prestações</label>

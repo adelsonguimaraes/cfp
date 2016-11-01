@@ -27,22 +27,24 @@ var despesaCtrl = function ($scope, $rootScope, $location, genericAPI) {
 		$scope.nova = true;
 	}
 
-	$scope.listar = function () {
+	$scope.listarPorUsuario = function () {
 		var data = {
-			"metodo":"listar",
+			"metodo":"listarPorUsuario",
 			"class":"despesa"
 		};
 		genericAPI.generic(data)
-			.then(function successCallback(response) {
-				if(response.data.length>0){
-		        	$scope.despesas = response.data;
-		        }
-	        }, function errorCallback(response) {
-	        	//error
-			});	
+		.then(function successCallback(response) {
+			if( response.data.success === true ){
+	        	$scope.despesas = response.data.data;
+	        }else{
+	        	alert( response.data.msg );
+	        }
+        }, function errorCallback(response) {
+        	//error
+		});	
 
 	}
-	$scope.listar();
+	$scope.listarPorUsuario();
 
 	$scope.editar = function (obj) {
 		obj.dataaquisicao = moment(obj.dataaquisicao).format('DD/MM/YYYY');
@@ -53,7 +55,7 @@ var despesaCtrl = function ($scope, $rootScope, $location, genericAPI) {
 		$scope.novaDespesa();
 	}
 
-	$scope.salvar = function (obj) {
+	$scope.salvar2 = function (obj) {
 		
 		obj.idusuario = $rootScope.usuario.idusuario;
 		
@@ -78,6 +80,24 @@ var despesaCtrl = function ($scope, $rootScope, $location, genericAPI) {
 			});	
 	}
 
+	$scope.salvar = function (obj) {
+		
+		var array = [];
+		for ( var i=0; i<obj.prestacoes; i++ ) {
+			// console.log( (i+1) + '/' + obj.prestacoes );
+			var data = obj.datavencimento.substr(3, 2) + '-' + obj.datavencimento.substr(0, 2) + '-' + obj.datavencimento.substr(6, 4);
+			data = moment(data).add(i, "M");
+			array.push({
+				valor: (obj.valor/obj.prestacoes).toFixed(2), //Math.round
+				vencimento: data.format('MM/DD/YYYY'),
+				status: 'EM ABERTO'
+			});
+			// console.log( data.format('MM/DD/YYYY')  );
+		};
+		console.log( array );
+
+	};
+
 	$scope.deletar = function (obj) {
 		
 		var data = {
@@ -87,9 +107,12 @@ var despesaCtrl = function ($scope, $rootScope, $location, genericAPI) {
 		};
 		genericAPI.generic(data)
 			.then(function successCallback(response) {
-				//success
-				inciaScope();
-				$scope.listar();
+				if( response.data.success === true ){
+		        	inciaScope();
+					$scope.listar();
+		        }else{
+		        	alert( response.data.msg );
+		        }
 	        }, function errorCallback(response) {
 	        	//error
 			});	
